@@ -3,9 +3,12 @@ sudo: required
 services:
   - docker
 
+env: 
+  - IMAGE=julglotain/go-middleware-ctx-example:1.0
+
 before_script:
-  - docker build -t julglotain/go-middleware-ctx-example:1.0.0 .
-  - docker run -d -p 8085:8085 julglotain/go-app-context-example:1.0.0
+  - docker build -t ${IMAGE} .
+  - docker run -d -p 127.0.0.1:8085:8085 ${IMAGE}
   - docker ps -a
 
 script: 
