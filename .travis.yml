@@ -8,8 +8,8 @@ services:
   - docker
 
 env: 
-  - IMAGE_NAME=julglotain/go-middleware-ctx-example
-  - IMAGE_VERSION=1.0
+  - IMAGE_NAME="julglotain/go-middleware-ctx-example"
+  - IMAGE_VERSION="1.0"
 
 before_script:
   - docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} .
