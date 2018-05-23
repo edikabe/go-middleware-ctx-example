@@ -11,9 +11,9 @@ before_script:
   - docker run -d -p 127.0.0.1:8085:8085 ${IMAGE}
   - docker ps -a
 
-script: 
-  provider: script
-  script: bash test.sh
+#script: 
+#  provider: script
+#  script: bash test.sh
 
 deploy: 
   provider: script
