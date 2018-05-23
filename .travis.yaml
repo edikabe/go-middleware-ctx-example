@@ -1,0 +1,19 @@
+sudo: required
+
+services:
+  - docker
+
+before_script:
+  - docker build -t julglotain/go-middleware-ctx-example:1.0.0 .
+  - docker run -d -p 8085:8085 julglotain/go-app-context-example:1.0.0
+  - docker ps -a
+
+script: 
+  provider: script
+  script: bash test.sh
+
+deploy: 
+  provider: script
+  script: bash docker_push.sh
+  on:  
+    branch: master
