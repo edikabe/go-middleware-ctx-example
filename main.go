@@ -1,7 +1,9 @@
+//src https://gocodecloud.com/blog/2016/11/15/simple-golang-http-request-context-example/
 package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -20,14 +22,23 @@ func StatusPage(w http.ResponseWriter, r *http.Request) {
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 	expiration := time.Now().Add(365 * 24 * time.Hour) ////Set to expire in 1 year
-	cookie := http.Cookie{Name: "username", Value: "alice_cooper@gmail.com", Expires: expiration}
-	http.SetCookie(w, &cookie)
+	if username := r.Header.Get("username"); len(username) != 0 {
+		cookie := http.Cookie{Name: "username", Value: username, Expires: expiration}
+		http.SetCookie(w, &cookie)
+		w.Write([]byte(fmt.Sprintf("You're now logged in as %s", username)))
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("You must provide a 'username' header in order to login"))
+	}
 }
 
 func LogoutPage(w http.ResponseWriter, r *http.Request) {
-	expiration := time.Now().AddDate(0, 0, -1) //Set to expire in the past
-	cookie := http.Cookie{Name: "username", Value: "alice_cooper@gmail.com", Expires: expiration}
-	http.SetCookie(w, &cookie)
+	if username := r.Header.Get("username"); len(username) != 0 {
+		expiration := time.Now().AddDate(0, 0, -1) //Set to expire in the past
+		cookie := http.Cookie{Name: "username", Value: username, Expires: expiration}
+		http.SetCookie(w, &cookie)
+		w.Write([]byte("You are now logged out"))
+	}
 }
 
 func AddContext(next http.Handler) http.Handler {
